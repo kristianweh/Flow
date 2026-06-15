@@ -723,6 +723,66 @@ public partial class MainViewModel : ObservableObject, IDisposable
         => Apps.FirstOrDefault(a => string.Equals(a.ImagePath, path, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
+    /// Apps Bansa knows (history of the last 30 days + live processes), each with a
+    /// launchable path when one has been learned. Used by the Network Tools bind dropdown.
+    /// Learns paths from running apps + saved limits into settings so they persist.
+    /// </summary>
+    public List<KnownApp> GetKnownApps()
+    {
+        var settings = App.Settings;
+
+        // Learn paths from currently-running networked apps.
+        foreach (var a in Apps)
+        {
+            if (string.IsNullOrEmpty(a.ImagePath)) continue;
+            var key = System.IO.Path.GetFileNameWithoutExtension(a.ImagePath).ToLowerInvariant();
+            if (key.Length > 0) settings.KnownAppPaths[key] = a.ImagePath;
+        }
+        // Seed from saved limit / pin paths too (still full paths).
+        foreach (var p in settings.AppDownloadLimitsKBs.Keys
+                     .Concat(settings.AppUploadLimitsKBs.Keys)
+                     .Concat(settings.PinnedAppPaths))
+        {
+            if (string.IsNullOrEmpty(p)) continue;
+            var key = System.IO.Path.GetFileNameWithoutExtension(p).ToLowerInvariant();
+            if (key.Length > 0 && !settings.KnownAppPaths.ContainsKey(key)) settings.KnownAppPaths[key] = p;
+        }
+
+        var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        try
+        {
+            foreach (var t in _history.GetTotals(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow))
+                if (!string.IsNullOrWhiteSpace(t.Name)) names.Add(t.Name);
+        }
+        catch { /* history unavailable — fall back to live apps only */ }
+        foreach (var a in Apps)
+            if (!string.IsNullOrWhiteSpace(a.Name)) names.Add(a.Name);
+
+        var list = names
+            .Select(n =>
+            {
+                settings.KnownAppPaths.TryGetValue(n.ToLowerInvariant(), out var path);
+                return new KnownApp(n, path);
+            })
+            .OrderByDescending(k => k.HasPath)
+            .ThenBy(k => k.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        SettingsManager.Save(settings);
+        return list;
+    }
+
+    /// <summary>Remembers a user-located exe path for a process name, so the dropdown keeps it.</summary>
+    public void LearnAppPath(string exePath)
+    {
+        if (string.IsNullOrEmpty(exePath)) return;
+        var key = System.IO.Path.GetFileNameWithoutExtension(exePath).ToLowerInvariant();
+        if (key.Length == 0) return;
+        App.Settings.KnownAppPaths[key] = exePath;
+        SettingsManager.Save(App.Settings);
+    }
+
+    /// <summary>
     /// Removes Scenarios override for one path and restores its base limit from settings.
     /// Called when a profile entry is deleted while Scenarios is on.
     /// </summary>

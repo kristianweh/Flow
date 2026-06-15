@@ -165,6 +165,21 @@
                                            Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" />
                             </StackPanel>
                         </RadioButton>
+                        <!-- Network Tools (Network mode) -->
+                        <RadioButton Style="{StaticResource NavItem}" GroupName="Nav" x:Name="NavNetworkTools"
+                                     Click="OnNavClick" Tag="7" Margin="0,4,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Viewbox Width="17" Height="17" Margin="0,0,12,0" VerticalAlignment="Center">
+                                    <Canvas Width="24" Height="24">
+                                        <Path Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}"
+                                              StrokeThickness="2" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                              Data="M5 12.55a11 11 0 0 1 14 0 M1.42 9a16 16 0 0 1 21.16 0 M8.53 16.11a6 6 0 0 1 6.95 0 M12 20h.01" />
+                                    </Canvas>
+                                </Viewbox>
+                                <TextBlock Text="Network Tools" VerticalAlignment="Center"
+                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type RadioButton}}}" />
+                            </StackPanel>
+                        </RadioButton>
                         <!-- Hardware -->
                         <RadioButton Style="{StaticResource NavItem}" GroupName="Nav" x:Name="NavHardware"
                                      Click="OnNavClick" Tag="2" Margin="0,4,0,0">
@@ -1279,6 +1294,9 @@
 
                 <!-- TOOLS -->
                 <views:ToolsView x:Name="ToolsPanel" Visibility="Collapsed" />
+
+                <!-- NETWORK TOOLS (Network domain) -->
+                <views:NetworkToolsView x:Name="NetworkToolsPanel" Visibility="Collapsed" />
 
                 <!-- SETTINGS -->
                 <ScrollViewer x:Name="SettingsPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">

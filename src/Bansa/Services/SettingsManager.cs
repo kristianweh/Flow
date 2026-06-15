@@ -22,6 +22,15 @@ public class LimitProfile
     public int    DownloadKbps{ get; set; } = 0;
 }
 
+/// <summary>An interface's IPv4/IPv6 metric state, captured before a priority change so it can be restored.</summary>
+public class InterfaceMetricBackup
+{
+    public bool AutomaticV4 { get; set; } = true;
+    public int  MetricV4    { get; set; } = 0;
+    public bool AutomaticV6 { get; set; } = true;
+    public int  MetricV6    { get; set; } = 0;
+}
+
 public class BansaSettings
 {
     public string Theme { get; set; } = "Dark";          // "Dark" or "Light"
@@ -107,6 +116,20 @@ public class BansaSettings
     public HashSet<string> AppBlockedPaths { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     // Paths of apps pinned to the top of the process list (lowercased).
     public List<string> PinnedAppPaths { get; set; } = new();
+
+    // ── Network Tools: per-app interface binding (ForceBindIP) ────────────────
+    // Learned map of process name (lower-case, no extension) → last-seen full exe path,
+    // so the bind dropdown can launch apps Bansa knows from history without re-browsing.
+    public Dictionary<string, string> KnownAppPaths { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    // ── Network Tools: interface priority ─────────────────────────────────────
+    // Alias of the adapter currently forced to the front of the default route (""=none).
+    public string PreferredAdapterAlias { get; set; } = "";
+    // Pre-change metric state captured the first time the user sets a preference,
+    // so "restore previous" can put every interface back exactly as it was.
+    public Dictionary<string, InterfaceMetricBackup> InterfacePriorityBackup { get; set; } =
+        new(StringComparer.OrdinalIgnoreCase);
+
     // ── Global hotkey ─────────────────────────────────────────────────────────
     // Virtual-key code for the Ctrl+Shift+? hotkey. 0x46='F' default. 0 = no hotkey (cleared by user).
     public int HotkeyVirtualKey { get; set; } = 0x46;

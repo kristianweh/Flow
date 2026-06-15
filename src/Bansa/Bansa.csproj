@@ -37,6 +37,7 @@
     <Resource Include="Resources\logo_ddu.png" />
     <Resource Include="Resources\logo_fancontrol.png" />
     <Resource Include="Resources\logo_spacesniffer.png" />
+    <Resource Include="Resources\logo_forcebindip.png" />
     <!-- Inter — bundled as WPF resources so they render identically
          on any Windows install regardless of whether the user has the font installed.
          Reference in XAML: pack://application:,,,/Fonts/#Inter -->

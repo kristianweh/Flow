@@ -446,6 +446,9 @@ public partial class MainWindow : Window
         _toolsVm = new ToolsViewModel();
         ToolsPanel.DataContext = _toolsVm;
 
+        // Network Tools panel needs the shared VM for the known-apps catalog.
+        NetworkToolsPanel.Init(Vm);
+
         // First-run reversibility explainer — shown once. Deferred to Background priority so the
         // main window paints first; skipped when starting hidden to the tray.
         if (!App.Settings.WelcomeDismissed && !App.Settings.StartMinimizedToTray)
@@ -672,6 +675,7 @@ public partial class MainWindow : Window
         NavTools.IsChecked     = idx == 3;
         NavHistory.IsChecked   = idx == 4;
         NavLimits.IsChecked    = idx == 6;
+        NavNetworkTools.IsChecked = idx == 7;
 
         // History is domain-aware: Network history vs Hardware history.
         bool hw = DomainManager.Current == AppDomainMode.Hardware;
@@ -679,7 +683,7 @@ public partial class MainWindow : Window
         UIElement otherHistory = hw ? HistoryPanel : HardwareHistoryPanel;
         if (otherHistory.Visibility == Visibility.Visible) FadeOut(otherHistory);
 
-        UIElement[] panels = [DashboardPanel, ProcPanel, HardwareMonitorPanel, ToolsPanel, historyEl, SettingsPanel, LimitsScenariosPanel];
+        UIElement[] panels = [DashboardPanel, ProcPanel, HardwareMonitorPanel, ToolsPanel, historyEl, SettingsPanel, LimitsScenariosPanel, NetworkToolsPanel];
         for (int i = 0; i < panels.Length; i++)
         {
             if (i == idx)
@@ -725,6 +729,7 @@ public partial class MainWindow : Window
         NavDashboard.Visibility = net ? Visibility.Visible : Visibility.Collapsed;
         NavProcesses.Visibility = net ? Visibility.Visible : Visibility.Collapsed;
         NavLimits.Visibility    = net ? Visibility.Visible : Visibility.Collapsed;
+        NavNetworkTools.Visibility = net ? Visibility.Visible : Visibility.Collapsed;
         NavHardware.Visibility  = net ? Visibility.Collapsed : Visibility.Visible;
         // Tools: Hardware mode only. Network tabs = Dashboard · Live Traffic · Limits & Scenarios · History.
         NavTools.Visibility     = net ? Visibility.Collapsed : Visibility.Visible;
