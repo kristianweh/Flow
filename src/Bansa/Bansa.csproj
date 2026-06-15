@@ -10,7 +10,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>Bansa</AssemblyName>
     <RootNamespace>Bansa</RootNamespace>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
     <ApplicationIcon>Resources\Icon_bansa-dark.ico</ApplicationIcon>
     <Company>Personal</Company>
     <Product>Bansa</Product>

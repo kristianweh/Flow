@@ -2,9 +2,11 @@
 
 A non-intrusive, fully-reversible per-app bandwidth **and hardware** monitor for Windows — all network monitoring and control is built on the OS's own machinery (no kernel drivers), so every change can be undone with one click. The one exception is hardware sensor access — see [the note below](#the-one-exception-the-hardware-sensor-driver).
 
-> **Status:** v1.2 — personal use, no commercial intent.
+> **Status:** v1.3 — personal use, no commercial intent.
 
-**New in v1.2 — robustness & efficiency.** Crash-safe settings (atomic write + automatic backup recovery), single-instance guard, a manual update check, monthly usage tracking with an optional data budget, multi-GPU picker, a 7d/30d history fix (older data was silently dropped from totals), Limits & Scenarios consolidation (connection speed + speed test moved in, Settings is now General · Appearance), visibility-gated rendering (near-zero UI cost while in the tray), SpaceSniffer in Tools, a unit-test suite, and CI.
+**New in v1.3 — Network Tools.** A new Network-only **Network Tools** panel: choose which connection Windows prefers (interface priority — system-wide but fully reversible to Automatic or your previous metrics); launch a native app with its traffic forced out one connection via ForceBindIP (one app over Wi-Fi, another over Ethernet), with up-front warnings for Microsoft Store and Electron/Chromium apps that can't be bound; and an on-demand connection scan that shows which connection each running app is actually using and flags any on the wrong one.
+
+**v1.2 — robustness & efficiency.** Crash-safe settings (atomic write + automatic backup recovery), single-instance guard, a manual update check, monthly usage tracking with an optional data budget, multi-GPU picker, a 7d/30d history fix, Limits & Scenarios consolidation, visibility-gated rendering (near-zero UI cost while in the tray), SpaceSniffer in Tools, a unit-test suite, and CI.
 
 **v1.1 — dual-domain redesign.** A header toggle switches Bansa between two purposes, re-skinning the whole accent:
 > - **Network** — live throughput, per-app traffic, limits & scenarios.
